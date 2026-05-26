@@ -7,7 +7,7 @@ A minimalistic PowerShell GUI that works out of the box. Is able to look up both
 **Customizable:**
 ```plaintext
 #-------------------------------------------------------#
-#	http://ip-api.com/json/$IPaddress = URL		#
+  http://ip-api.com/json/$IPaddress = URL
 #-------------------------------------------------------#
 ```
 - Change http://ip-api.com/json/ to the URL desired
