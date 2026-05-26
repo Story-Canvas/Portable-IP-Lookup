@@ -1,0 +1,58 @@
+#-------------------------------#
+#	Created by: SC-Dev	#
+#-------------------------------#
+
+[void][System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
+
+function Get-IPInfo {
+    try {
+        $IPaddress = $textBox.Text
+
+#-------------------------------------------------------#
+#	http://ip-api.com/json/$IPaddress = URL		#
+#-------------------------------------------------------#
+
+        $result = Invoke-RestMethod -Method Get -Uri "http://ip-api.com/json/$IPaddress"
+        $resultTextBox.Text = $result | ConvertTo-Json -Depth 4
+    } catch {
+        $resultTextBox.Text = "⚠️ Error in line $($_.InvocationInfo.ScriptLineNumber): $($Error[0])"
+    }
+}
+
+#-------------------------#
+#	Windows Form      #
+#-------------------------#
+
+$form = New-Object Windows.Forms.Form
+$form.Text = "IP Info Lookup"
+$form.Size = New-Object Drawing.Size(440, 340)
+$form.StartPosition = "CenterScreen"
+$form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
+
+$label = New-Object Windows.Forms.Label
+$label.Text = "Enter IP address to locate:"
+$label.Location = New-Object Drawing.Point(10, 10)
+$label.Size = New-Object Drawing.Size (150, 15)
+$form.Controls.Add($label)
+
+$textBox = New-Object Windows.Forms.TextBox
+$textBox.Location = New-Object Drawing.Point(10, 30)
+$textBox.Size = New-Object Drawing.Size(200, 25)
+$form.Controls.Add($textBox)
+
+$button = New-Object Windows.Forms.Button
+$button.Text = "Get IP Info"
+$button.Location = New-Object Drawing.Point(220, 30)
+$button.Size = New-Object Drawing.Size(150, 25)
+$button.Add_Click({ Get-IPInfo })
+$form.Controls.Add($button)
+
+$resultTextBox = New-Object Windows.Forms.TextBox
+$resultTextBox.Location = New-Object Drawing.Point(10, 70)
+$resultTextBox.Size = New-Object Drawing.Size(400, 220)
+$resultTextBox.Multiline = $true
+$resultTextBox.ScrollBars = "Both"
+$resultTextBox.ReadOnly = $true
+$form.Controls.Add($resultTextBox)
+
+$form.ShowDialog() | Out-Null
